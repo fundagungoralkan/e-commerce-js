@@ -13,40 +13,26 @@ const uiElement = {
 
 //apiden alinan verileri erkana basma
 const renderProduct = (products, callBackFunction) => {
+    const productsHtml = products.map(product => `
+    <div class="product-hover-card">
+      <div class="hover-img">
+        <img src="${product.image}" alt="${product.title}" />
+      </div>
+      <div class="hover-content">
+        <h2>${product.title}</h2>
+        <p>$${product.price.toFixed(2)}</p>
+        <button class="add-to-cart" data-id="${product.id}">Add to cart</button>
+      </div>
+    </div>
+    `).join("");
 
-    const productsHtml = products
-         .map(
-      (product) => `  <div class="product">
-         
-          <img
-            src="${product.image}"
-            alt="${product.title}"
-          />
-        
+    uiElement.productsList.innerHTML = productsHtml;
 
-          <div class="product-info">
-            <h2>${product.title}</h2>
-
-            <p>$${product.price.toFixed(2)}</p>
-
-            <button class="add-to-cart" data-id="${
-              product.id
-            }"  >Add to cart</button>
-          </div>
-        </div>`
-    )
-    .join("");  
-
-    uiElement.productsList.innerHTML = productsHtml
-    console.log(productsHtml)
-
-    const addToCartButtons = document.querySelectorAll(".add-to-cart")
-
-    addToCartButtons.forEach((button) => {
-        button.addEventListener('click',callBackFunction)
-
-    })
-}
+    const addToCartButtons = document.querySelectorAll(".add-to-cart");
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', callBackFunction);
+    });
+};
 
 
 //urun yoksa

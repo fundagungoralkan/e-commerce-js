@@ -1,93 +1,76 @@
-import { getFromLocale, saveToLocal } from "./helper.js"
-import { renderCartItems, renderCartQuantity, renderCartTotal, renderNotFound } from "./ui.js"
+import { getFromLocale, saveToLocal } from "./helper.js";
+import { renderCartItems, renderCartQuantity, renderCartTotal, renderNotFound } from "./ui.js";
 
-const CART = "cart"
+const CART = "cart";
 
-let cart = getFromLocale(CART)
+let cart = getFromLocale(CART) || [];
 
-
-const addToCart = (e, products)=>{
-    const productId = +e.target.dataset.id
-
-    const foundProduct = products.find((pro)=> pro.id === productId)
-
-    const existingProduct = cart.find((item)=> item.id === productId)
+// Sepete ürün ekleme
+const addToCart = (e, products) => {
+    const productId = +e.target.dataset.id;
+    const foundProduct = products.find((pro) => pro.id === productId);
+    const existingProduct = cart.find((item) => item.id === productId);
 
     if (existingProduct) {
-        existingProduct.quantity++
+        existingProduct.quantity++;
     } else {
         const cartItem = {
             ...foundProduct,
             quantity: 1
-        }
-        cart.push(cartItem)
+        };
+        cart.push(cartItem);
     }
 
-    //locale kaydetme
-    saveToLocal(CART, cart)
-    e.target.textContent = "Eklendi"
+    // LocalStorage kaydet
+    saveToLocal(CART, cart);
+
+    // Buton yazısı değiştir
+    e.target.textContent = "Eklendi";
     setTimeout(() => {
-         e.target.textContent = "Add To Cart"
+        e.target.textContent = "Add To Cart";
     }, 1000);
 
-    renderCartQuantity(cart)
-    
-}
+    // Sepet ikonunu güncelle
+    renderCartQuantity(cart);
+};
 
-
-//sepetteki miktari guncelle
-const onQuantityChange = (e) =>{
-    console.log("onQuantityChange ", e)
-    const productId = parseInt(e.target.dataset.id)
-
-    const newQuantity = parseInt(e.target.value)
+// Sepetteki miktarı değiştir
+const onQuantityChange = (e) => {
+    const productId = +e.target.dataset.id;
+    const newQuantity = +e.target.value;
 
     if (newQuantity > 0) {
-        
-        const updateItem = cart.find((item) => item.id === productId)
-        updateItem.quantity = newQuantity
+        const updateItem = cart.find((item) => item.id === productId);
+        updateItem.quantity = newQuantity;
 
-        saveToLocal(CART, cart)
-        
-        //cart toplami guncelle ?
-        renderCartTotal(cart)
+        saveToLocal(CART, cart);
 
-
-        renderCartQuantity(cart)
-
-
+        renderCartTotal(cart);
+        renderCartQuantity(cart);
     } else {
-        alert("0 dan buyuk olmali")
-        return
+        alert("Miktar 0'dan büyük olmalı");
+        e.target.value = 1;
     }
-}
+};
 
-//local"den sil
+// Ürünü sepetten kaldır
 const removeFromCart = (e) => {
-    const response = confirm("silmek istedigine emin misin?")
-
+    const response = confirm("Silmek istediğine emin misin?");
     if (response) {
-         
-        const productId = Number(e.target.dataset.id)
+        const productId = +e.target.dataset.id;
+        cart = cart.filter((item) => item.id !== productId);
 
-        cart = cart.filter((item) => item.id !== productId)
+        saveToLocal(CART, cart);
 
-        saveToLocal(CART, cart)
-
-        //toplami guncelle ?
-        renderCartTotal(cart)
-
-
+        renderCartTotal(cart);
         if (cart.length > 0) {
-            renderCartItems(cart)
+            renderCartItems(cart);
         } else {
-            renderNotFound()
+            renderNotFound();
         }
     }
 
-    console.log("anlikBasket ", cart)
-   renderCartQuantity(cart)
-}
+    renderCartQuantity(cart);
+};
 
-
-export {addToCart, onQuantityChange, removeFromCart}
+export { addToCart, onQuantityChange, removeFromCart };
