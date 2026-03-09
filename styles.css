@@ -503,7 +503,7 @@ footer .copyright {
   display: flex;
   align-items: center;
   gap: 5px;
-  margin: 20px 10px;
+ margin-top: -8px;
   color: var(--text-dark);
   font-size: 20px;
   font-weight: bold;
