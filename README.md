@@ -36,7 +36,7 @@ It includes responsive design, smooth animations, and dynamic product rendering 
 
 <p>
 <strong>Clone the repository:</strong><br>
-git clone https://github.com/fundagungoralkan/costy-fashion-website.git
+git clone https://github.com/fundagungoralkan/e-commerce-js.git
 </p>
 
 <p>
